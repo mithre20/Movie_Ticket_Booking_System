@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us & Cinema Information - CineMithresh</title>
+  <meta name="description" content="Discover CineMithresh in Erode, Tamil Nadu. Premium Dolby Atmos sound, 4K Laser Projection, plush seating, and gourmet food.">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <a href="./index.html" class="brand-logo">
+        <img data-media="logo1.jpg" onerror="mediaFallback(this)" alt="CineMithresh Logo">
+        <div class="brand-text">
+          <div class="brand-title">CINE<span>MITHRESH</span></div>
+          <div class="brand-tagline">CINEMA EXPERIENCE REDEFINED</div>
+        </div>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="./index.html" class="nav-link">🎬 Home</a></li>
+        <li><a href="./booking.html" class="nav-link">🎟️ Book Tickets</a></li>
+        <li><a href="./ratings.html" class="nav-link">⭐ Ratings & Reviews</a></li>
+        <li><a href="./about_us.html" class="nav-link active">ℹ️ About Us</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button onclick="openMyBookingsModal()" class="btn btn-secondary btn-sm">
+          🎟️ My Tickets
+        </button>
+        <div id="navUserSlot">
+          <a href="./login.html" class="btn btn-primary btn-sm">Sign In</a>
+        </div>
+        <button class="mobile-toggle" aria-label="Toggle Navigation">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- About Hero -->
+  <main class="container">
+    <div class="about-hero" data-media-bg="background2.png">
+      <div style="max-width: 700px;">
+        <span class="badge badge-gold" style="margin-bottom: 12px;">ESTABLISHED FOR MOVIE BUFFS</span>
+        <h1 style="font-size: 2.8rem; font-weight: 800; line-height: 1.15; margin-bottom: 14px;">Welcome to CineMithresh</h1>
+        <p style="font-size: 1.05rem; color: #e2e8f0; line-height: 1.6; margin-bottom: 24px;">
+          Bringing Hollywood, Kollywood, and pan-Indian cinema to life in Erode with state-of-the-art audiovisual technology, luxury seating, and lightning-fast digital ticket booking.
+        </p>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+          <a href="./booking.html" class="btn btn-primary btn-lg">🎟️ Book Tickets Now</a>
+          <a href="#locationSection" class="btn btn-secondary btn-lg">📍 Locate Our Cinema</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cinema Specifications & World-Class Features -->
+    <section>
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Cinema Specifications</h2>
+          <p class="section-subtitle">Engineered to bring every frame and sound wave to life</p>
+        </div>
+      </div>
+
+      <div class="cinema-specs-grid">
+        <div class="spec-card">
+          <div style="font-size: 2.2rem; margin-bottom: 12px;">🔊</div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 8px;">Dolby Atmos 7.1</h3>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
+            Over 64 independent sound objects move around and above you in 3D audio space, allowing you to hear whispers, explosions, and rains with uncanny realism.
+          </p>
+        </div>
+
+        <div class="spec-card">
+          <div style="font-size: 2.2rem; margin-bottom: 12px;">📽️</div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 8px;">4K Dual Laser Projection</h3>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
+            Cutting-edge laser light engines producing infinite contrast, true blacks, high dynamic range (HDR), and vibrant cinematic color gamuts.
+          </p>
+        </div>
+
+        <div class="spec-card">
+          <div style="font-size: 2.2rem; margin-bottom: 12px;">🛋️</div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 8px;">VIP Motorized Recliners</h3>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
+            Spacious rows with 180-degree electronic pushback recliners, personal swivel tables, cup holders, and high-speed USB phone charging points.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Address & Contact Information Section -->
+    <section id="locationSection">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Visit Our Theatre</h2>
+          <p class="section-subtitle">Centrally located in the heart of Erode city</p>
+        </div>
+      </div>
+
+      <div class="contact-layout">
+        <!-- Address Card -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 32px;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+            <span style="font-size: 1.6rem;">📍</span>
+            <h3 style="font-size: 1.35rem; margin: 0;">Theatre Address</h3>
+          </div>
+
+          <div style="font-size: 0.95rem; color: #cbd5e1; line-height: 1.7; margin-bottom: 24px; padding-left: 36px; border-left: 2px solid var(--accent-primary);">
+            <strong>CineMithresh Cinemas</strong><br>
+            2nd Floor, Parimalam Complex,<br>
+            161, Mettur Road, Near Kalyan Silks,<br>
+            Above UCO Bank,<br>
+            Erode, Tamil Nadu - 638011
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem;">
+              <span style="font-size: 1.2rem;">📞</span>
+              <span><strong>Box Office Helpline:</strong> +91 99440 12345 / 0424-225678</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem;">
+              <span style="font-size: 1.2rem;">✉️</span>
+              <span><strong>Support Email:</strong> contact@cinemithresh.com</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem;">
+              <span style="font-size: 1.2rem;">⏰</span>
+              <span><strong>Box Office Hours:</strong> 09:30 AM – 11:30 PM (Daily)</span>
+            </div>
+          </div>
+
+          <a href="https://maps.google.com/?q=Parimalam+Complex+Mettur+Road+Erode" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-block">
+            🗺️ Open in Google Maps
+          </a>
+        </div>
+
+        <!-- Quick Inquiry / Contact Message Form -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 32px;">
+          <h3 style="font-size: 1.35rem; margin-bottom: 6px;">Send Us a Message</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px;">Questions about group bookings, corporate events, or cinema inquiries?</p>
+
+          <form onsubmit="handleContactSubmit(event)">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="input-field" id="contactName" placeholder="Your name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="input-field" id="contactEmail" placeholder="yourname@gmail.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Inquiry Subject</label>
+              <select class="theater-select" id="contactSubject">
+                <option>Ticket Booking Query</option>
+                <option>Bulk / Corporate Booking</option>
+                <option>Cinema Hall Rental</option>
+                <option>General Feedback</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Your Message</label>
+              <textarea class="input-field" id="contactMsg" rows="3" placeholder="How can our theatre team help you?" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Frequently Asked Questions Accordion -->
+    <section id="faq" style="margin-bottom: 80px;">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Frequently Asked Questions</h2>
+          <p class="section-subtitle">Everything you need to know about your cinema visit</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>Can I show the M-Ticket on my mobile phone at the cinema gate?</span>
+          <span>▼</span>
+        </div>
+        <div class="faq-answer">
+          Yes! All online bookings generate a digital M-Ticket with an encrypted QR code and booking reference. Simply present your phone screen to our gate usher for contactless scanning. No printouts required!
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>What are the ticket pricing tiers?</span>
+          <span>▼</span>
+        </div>
+        <div class="faq-answer">
+          We offer three distinct classes: VIP Pushback Recliner Lounge (₹350), Platinum Premium (₹220), and Gold Standard (₹150). All tiers include full Dolby Atmos audio immersion.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>Is parking available at the complex?</span>
+          <span>▼</span>
+        </div>
+        <div class="faq-answer">
+          Yes! Parimalam Complex features 2-wheeler and 4-wheeler basement parking with 24/7 security surveillance and elevator access directly to our 2nd-floor cinema lobby.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>Can I order food and snacks directly to my seat?</span>
+          <span>▼</span>
+        </div>
+        <div class="faq-answer">
+          Absolutely! You can add gourmet popcorn, loaded nachos, and chilled beverages during your online ticket booking or order via the concession counters during intermission.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <div class="brand-title">CINE<span>MITHRESH</span></div>
+        <p>Premium cinema destination in Erode delivering magical entertainment and modern convenience.</p>
+      </div>
+      <div>
+        <h4 class="footer-title">Pages</h4>
+        <ul class="footer-links">
+          <li><a href="./index.html">Home</a></li>
+          <li><a href="./booking.html">Book Tickets</a></li>
+          <li><a href="./ratings.html">Ratings</a></li>
+          <li><a href="./about_us.html">About Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-title">Social Connect</h4>
+        <ul class="footer-links">
+          <li><a>Instagram @CineMithresh</a></li>
+          <li><a>YouTube Cinema Trailers</a></li>
+          <li><a>Twitter @CineMithresh</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-title">Location</h4>
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">2nd Floor, Parimalam Complex, Mettur Road, Erode, Tamil Nadu</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/static/app.js"></script>
+  <script>
+    function toggleFaq(el) {
+      const parent = el.parentElement;
+      parent.classList.toggle('active');
+    }
+
+    function handleContactSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('contactName').value.trim();
+      showToast(`Thank you ${name}! Your inquiry has been sent to our theatre desk.`, 'success');
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>

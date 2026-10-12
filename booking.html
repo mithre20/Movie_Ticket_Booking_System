@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Movie Tickets - CineMithresh</title>
+  <meta name="description" content="Select seats, showtimes, and book your cinema tickets online with interactive seat map at CineMithresh.">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <a href="./index.html" class="brand-logo">
+        <img data-media="logo1.jpg" onerror="mediaFallback(this)" alt="CineMithresh Logo">
+        <div class="brand-text">
+          <div class="brand-title">CINE<span>MITHRESH</span></div>
+          <div class="brand-tagline">CINEMA EXPERIENCE REDEFINED</div>
+        </div>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="./index.html" class="nav-link">🎬 Home</a></li>
+        <li><a href="./booking.html" class="nav-link active">🎟️ Book Tickets</a></li>
+        <li><a href="./ratings.html" class="nav-link">⭐ Ratings & Reviews</a></li>
+        <li><a href="./about_us.html" class="nav-link">ℹ️ About Us</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button onclick="openMyBookingsModal()" class="btn btn-secondary btn-sm">
+          🎟️ My Tickets
+        </button>
+        <div id="navUserSlot">
+          <a href="./login.html" class="btn btn-primary btn-sm">Sign In</a>
+        </div>
+        <button class="mobile-toggle" aria-label="Toggle Navigation">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Booking Main Content -->
+  <main class="container">
+    <div style="margin-top: 28px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px;">
+      <div>
+        <h1 style="font-size: 2.1rem; font-weight: 800;">Book Movie Tickets</h1>
+        <p style="color: var(--text-secondary); font-size: 0.92rem;">Select your show, pick your favorite seats, and receive an instant M-Ticket</p>
+      </div>
+      <div class="badge badge-cyan" style="padding: 6px 14px; font-size: 0.82rem;">
+        ⚡ Instant Confirmation & QR Pass
+      </div>
+    </div>
+
+    <div class="booking-layout">
+      <!-- Main Booking Workflow -->
+      <div class="booking-main">
+
+        <!-- Step 1: Select Movie -->
+        <section class="step-card">
+          <div class="step-header">
+            <div class="step-number">1</div>
+            <h2 class="step-title">Select Movie</h2>
+          </div>
+          <div class="movie-selector-strip" id="movieSelectorStrip">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </section>
+
+        <!-- Step 2: Date & Theater & Showtime -->
+        <section class="step-card">
+          <div class="step-header">
+            <div class="step-number">2</div>
+            <h2 class="step-title">Cinema & Showtime</h2>
+          </div>
+
+          <!-- Theater Selection -->
+          <div style="margin-bottom: 20px;">
+            <label class="form-label">Select Screen / Audi</label>
+            <select class="theater-select" id="theaterSelect" onchange="updateSummary()">
+              <option value="Mithresh IMAX Laser - Screen 1">Mithresh IMAX Laser - Screen 1 (4K Dual Laser & 12-Track Audio)</option>
+              <option value="Mithresh Dolby Atmos - Audi 2">Mithresh Dolby Atmos - Audi 2 (64 Discrete Surround Channels)</option>
+              <option value="Mithresh VIP Lounge - Screen 3">Mithresh VIP Lounge - Screen 3 (Plush Motorized Recliners)</option>
+            </select>
+          </div>
+
+          <!-- Date Selector -->
+          <div style="margin-bottom: 20px;">
+            <label class="form-label">Select Date</label>
+            <div class="option-pills" id="datePickerContainer">
+              <!-- Dates generated via JS -->
+            </div>
+          </div>
+
+          <!-- Showtime Selector -->
+          <div>
+            <label class="form-label">Select Showtime</label>
+            <div class="option-pills" id="timePickerContainer">
+              <button type="button" class="time-slot selected" onclick="selectTime('10:00 AM', this)">10:00 AM</button>
+              <button type="button" class="time-slot" onclick="selectTime('01:30 PM', this)">01:30 PM</button>
+              <button type="button" class="time-slot" onclick="selectTime('05:00 PM', this)">05:00 PM</button>
+              <button type="button" class="time-slot" onclick="selectTime('08:30 PM', this)">08:30 PM</button>
+              <button type="button" class="time-slot" onclick="selectTime('11:15 PM', this)">11:15 PM</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Step 3: Interactive Seat Matrix -->
+        <section class="step-card">
+          <div class="step-header" style="justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="step-number">3</div>
+              <h2 class="step-title">Choose Your Seats</h2>
+            </div>
+            <span id="selectedSeatCounterBadge" class="badge badge-gold">0 Seats Selected</span>
+          </div>
+
+          <!-- Cinema Screen Graphic -->
+          <div class="screen-area">
+            <div class="screen-curve"></div>
+            <div class="screen-text">ALL EYES THIS WAY • CINEMA SCREEN</div>
+          </div>
+
+          <!-- Legend -->
+          <div class="seat-legend">
+            <div class="legend-item">
+              <div class="seat-sample available"></div>
+              <span>Available</span>
+            </div>
+            <div class="legend-item">
+              <div class="seat-sample selected"></div>
+              <span>Selected</span>
+            </div>
+            <div class="legend-item">
+              <div class="seat-sample booked"></div>
+              <span>Booked</span>
+            </div>
+            <div class="legend-item">
+              <div class="seat-sample vip"></div>
+              <span>VIP Recliner</span>
+            </div>
+          </div>
+
+          <!-- Seats Grid Arena -->
+          <div class="seat-matrix-wrapper">
+            <div class="seat-grid" id="seatMatrixArena">
+              <!-- Dynamically generated seat matrix -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Step 4: Add-On Snacks & Refreshments -->
+        <section class="step-card" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+          <div class="step-header">
+            <div class="step-number">4</div>
+            <h2 class="step-title">Food & Beverages (Optional)</h2>
+          </div>
+          <div class="concessions-grid">
+            <div class="snack-card">
+              <div class="snack-icon">🍿</div>
+              <div class="snack-info">
+                <div class="snack-name">Caramel Popcorn</div>
+                <div class="snack-price">₹180</div>
+              </div>
+              <div class="snack-controls">
+                <button type="button" class="qty-btn" onclick="updateSnack('popcorn', -1)">-</button>
+                <span class="snack-qty" id="qty-popcorn">0</span>
+                <button type="button" class="qty-btn" onclick="updateSnack('popcorn', 1)">+</button>
+              </div>
+            </div>
+
+            <div class="snack-card">
+              <div class="snack-icon">🧀</div>
+              <div class="snack-info">
+                <div class="snack-name">Loaded Nachos</div>
+                <div class="snack-price">₹140</div>
+              </div>
+              <div class="snack-controls">
+                <button type="button" class="qty-btn" onclick="updateSnack('nachos', -1)">-</button>
+                <span class="snack-qty" id="qty-nachos">0</span>
+                <button type="button" class="qty-btn" onclick="updateSnack('nachos', 1)">+</button>
+              </div>
+            </div>
+
+            <div class="snack-card">
+              <div class="snack-icon">🥤</div>
+              <div class="snack-info">
+                <div class="snack-name">Chilled Coca-Cola</div>
+                <div class="snack-price">₹90</div>
+              </div>
+              <div class="snack-controls">
+                <button type="button" class="qty-btn" onclick="updateSnack('coke', -1)">-</button>
+                <span class="snack-qty" id="qty-coke">0</span>
+                <button type="button" class="qty-btn" onclick="updateSnack('coke', 1)">+</button>
+              </div>
+            </div>
+
+            <div class="snack-card">
+              <div class="snack-icon">🍱</div>
+              <div class="snack-info">
+                <div class="snack-name">Couple Combo Pack</div>
+                <div class="snack-price">₹320</div>
+              </div>
+              <div class="snack-controls">
+                <button type="button" class="qty-btn" onclick="updateSnack('combo', -1)">-</button>
+                <span class="snack-qty" id="qty-combo">0</span>
+                <button type="button" class="qty-btn" onclick="updateSnack('combo', 1)">+</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Booking Summary Sidebar -->
+      <aside class="booking-summary-sidebar">
+        <h3 class="summary-title">📋 Booking Summary</h3>
+
+        <div class="summary-movie-info">
+          <img data-media="movie4.jpg" onerror="mediaFallback(this)" alt="Movie Poster" class="summary-poster" id="summaryMoviePoster">
+          <div class="summary-details">
+            <h4 id="summaryMovieTitle">Godzilla x Kong</h4>
+            <p id="summaryMovieMeta">Action / Sci-Fi • 1h 55m</p>
+            <div class="badge badge-glass" id="summaryMovieCert" style="margin-top: 6px;">UA 13+</div>
+          </div>
+        </div>
+
+        <div class="summary-row">
+          <span>Cinema Hall</span>
+          <span id="summaryTheater" style="text-align: right; max-width: 190px;">Mithresh IMAX</span>
+        </div>
+        <div class="summary-row">
+          <span>Show Date</span>
+          <span id="summaryDate">Today, Oct 10</span>
+        </div>
+        <div class="summary-row">
+          <span>Show Time</span>
+          <span id="summaryTime">10:00 AM</span>
+        </div>
+        <div class="summary-row">
+          <span>Selected Seats</span>
+          <span id="summarySeatsText" class="summary-seats-badge">None selected</span>
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-row">
+          <span>Tickets (<span id="summarySeatCount">0</span>x)</span>
+          <span id="summaryTicketSubtotal">₹0</span>
+        </div>
+        <div class="summary-row">
+          <span>Food & Beverages</span>
+          <span id="summarySnacksSubtotal">₹0</span>
+        </div>
+        <div class="summary-row">
+          <span>Convenience Fee</span>
+          <span id="summaryFee">₹0</span>
+        </div>
+        <div class="summary-row" id="discountRow" style="display: none; color: var(--accent-green);">
+          <span>Promo Discount (20%)</span>
+          <span id="summaryDiscount">-₹0</span>
+        </div>
+
+        <!-- Promo Code Input -->
+        <div style="display: flex; gap: 8px; margin: 14px 0;">
+          <input type="text" class="input-field" id="promoInput" placeholder="Promo code (MITHRESH20)" style="padding: 8px 12px; font-size: 0.8rem; text-transform: uppercase;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="applyPromo()">Apply</button>
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-total">
+          <div class="total-label">Total Payable</div>
+          <div class="total-amount" id="summaryGrandTotal">₹0</div>
+        </div>
+
+        <!-- Customer Contact Details -->
+        <div class="customer-inputs">
+          <label class="form-label" style="margin-bottom: 2px;">Your Contact Details</label>
+          <input type="text" class="input-field" id="custName" placeholder="Full Name (required)" required>
+          <input type="email" class="input-field" id="custEmail" placeholder="Email Address (required)" required>
+          <input type="tel" class="input-field" id="custPhone" placeholder="Mobile Number">
+        </div>
+
+        <!-- Book Action Button -->
+        <button type="button" class="btn btn-primary btn-block btn-lg" id="btnConfirmBooking" onclick="confirmBooking()">
+          ⚡ Confirm & Book Tickets
+        </button>
+
+        <p style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 12px;">
+          🔒 100% Safe & Secure Booking • Instant M-Ticket
+        </p>
+
+        <!-- Hidden CGI Form fallback for legacy compatibility -->
+        <form id="legacyCgiForm" action="register.py" method="post" style="display: none;">
+          <input type="hidden" name="mymovie" id="cgiMovieName">
+          <input type="hidden" name="myseats" id="cgiSeatCount">
+        </form>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <div class="brand-title">CINE<span>MITHRESH</span></div>
+        <p>Ultra-modern movie booking platform with instant QR ticket passes and premium cinema amenities.</p>
+      </div>
+      <div>
+        <h4 class="footer-title">Pages</h4>
+        <ul class="footer-links">
+          <li><a href="./index.html">Home</a></li>
+          <li><a href="./booking.html">Book Tickets</a></li>
+          <li><a href="./ratings.html">Ratings</a></li>
+          <li><a href="./about_us.html">About Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-title">Cinema Locations</h4>
+        <ul class="footer-links">
+          <li><a>Screen 1: Mithresh IMAX 4K</a></li>
+          <li><a>Screen 2: Dolby Atmos Audi</a></li>
+          <li><a>Screen 3: VIP Luxury Recliner</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-title">Customer Care</h4>
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">Phone: +91 99440 12345</p>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">Email: tickets@cinemithresh.com</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/static/app.js"></script>
+  <script>
+    // State
+    let selectedMovie = null;
+    let selectedDate = null;
+    let selectedTime = '10:00 AM';
+    let currentShowId = 1;
+    let selectedSeats = []; // e.g. [{ id: 'C4', price: 220, tier: 'Platinum' }]
+    let snacks = { popcorn: 0, nachos: 0, coke: 0, combo: 0 };
+    const SNACK_PRICES = { popcorn: 180, nachos: 140, coke: 90, combo: 320 };
+    let promoApplied = false;
+    let discountPercent = 0;
+    let currentPromoCode = '';
+
+    // Screen map
+    const SCREEN_ID_MAP = {
+      'Mithresh IMAX Laser - Screen 1': 1,
+      'Mithresh Dolby Atmos - Audi 2': 2,
+      'Mithresh VIP Lounge - Screen 3': 3
+    };
+
+    // Seat Layout Configuration
+    const SEAT_LAYOUT = [
+      { row: 'A', tier: 'VIP', price: 350, count: 10, isVip: true },
+      { row: 'B', tier: 'VIP', price: 350, count: 10, isVip: true },
+      { row: 'C', tier: 'Platinum', price: 220, count: 10 },
+      { row: 'D', tier: 'Platinum', price: 220, count: 10 },
+      { row: 'E', tier: 'Platinum', price: 220, count: 10 },
+      { row: 'F', tier: 'Gold', price: 150, count: 10 },
+      { row: 'G', tier: 'Gold', price: 150, count: 10 },
+      { row: 'H', tier: 'Gold', price: 150, count: 10 }
+    ];
+
+    // Initialization
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Check URL parameters for pre-selected movie
+      const urlParams = new URLSearchParams(window.location.search);
+      const movieIdParam = urlParams.get('movie');
+
+      renderMovieStrip(movieIdParam);
+      generateDatePills();
+
+      // Pre-fill user data if logged in
+      const user = await fetchCurrentUser();
+      if (user) {
+        const nameInput = document.getElementById('custName');
+        const emailInput = document.getElementById('custEmail');
+        const phoneInput = document.getElementById('custPhone');
+        if (nameInput && user.name) nameInput.value = user.name;
+        if (emailInput && user.email) emailInput.value = user.email;
+        if (phoneInput && user.phone) phoneInput.value = user.phone;
+      }
+
+      await resolveCurrentShowId();
+      await buildSeatMatrix();
+      await updateSummary();
+    });
+
+    function renderMovieStrip(selectedId) {
+      const strip = document.getElementById('movieSelectorStrip');
+      if (!strip) return;
+
+      const initialMovie = MOVIES_DATABASE.find(m => m.id === selectedId) || MOVIES_DATABASE[0];
+      selectedMovie = initialMovie;
+
+      strip.innerHTML = MOVIES_DATABASE.map(m => `
+        <div class="movie-option-card ${m.id === selectedMovie.id ? 'selected' : ''}" onclick="selectMovie('${m.id}')" id="movieOpt-${m.id}">
+          <img src="${m.poster}" onerror="mediaFallback(this)" alt="${m.title}">
+          <div class="movie-option-title">${m.title}</div>
+        </div>
+      `).join('');
+    }
+
+    async function selectMovie(id) {
+      selectedMovie = MOVIES_DATABASE.find(m => m.id === id);
+      document.querySelectorAll('.movie-option-card').forEach(el => el.classList.remove('selected'));
+      const activeEl = document.getElementById(`movieOpt-${id}`);
+      if (activeEl) activeEl.classList.add('selected');
+      selectedSeats = [];
+      await resolveCurrentShowId();
+      await buildSeatMatrix();
+      await updateSummary();
+    }
+
+    function generateDatePills() {
+      const container = document.getElementById('datePickerContainer');
+      if (!container) return;
+
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      
+      const now = new Date();
+      let html = '';
+
+      for (let i = 0; i < 5; i++) {
+        const d = new Date(now);
+        d.setDate(now.getDate() + i);
+
+        const dayName = i === 0 ? 'Today' : (i === 1 ? 'Tmrw' : days[d.getDay()]);
+        const dateStr = `${d.getDate()} ${months[d.getMonth()]}`;
+        const fullDateStr = `${dayName}, ${months[d.getMonth()]} ${d.getDate()}`;
+
+        if (i === 0) selectedDate = fullDateStr;
+
+        html += `
+          <div class="pill-choice ${i === 0 ? 'selected' : ''}" onclick="selectDate('${fullDateStr}', this)">
+            <span class="day">${dayName}</span>
+            <span class="date">${d.getDate()}</span>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    async function selectDate(dateStr, el) {
+      selectedDate = dateStr;
+      document.querySelectorAll('#datePickerContainer .pill-choice').forEach(p => p.classList.remove('selected'));
+      if (el) el.classList.add('selected');
+      selectedSeats = [];
+      await resolveCurrentShowId();
+      await buildSeatMatrix();
+      await updateSummary();
+    }
+
+    async function selectTime(timeStr, el) {
+      selectedTime = timeStr;
+      document.querySelectorAll('#timePickerContainer .time-slot').forEach(p => p.classList.remove('selected'));
+      if (el) el.classList.add('selected');
+      selectedSeats = [];
+      await resolveCurrentShowId();
+      await buildSeatMatrix();
+      await updateSummary();
+    }
+
+    async function resolveCurrentShowId() {
+      if (!selectedMovie) return;
+      const theaterVal = document.getElementById('theaterSelect').value;
+      const screenId = SCREEN_ID_MAP[theaterVal] || 1;
+
+      try {
+        const res = await fetch(`/api/shows?movie_id=${encodeURIComponent(selectedMovie.id)}&screen_id=${screenId}&date=${encodeURIComponent(selectedDate || 'Today')}`);
+        const data = await res.json();
+        if (data.success && data.shows && data.shows.length > 0) {
+          const match = data.shows.find(s => s.show_time === selectedTime) || data.shows[0];
+          currentShowId = match.id;
+        } else {
+          currentShowId = 1;
+        }
+      } catch (e) {
+        currentShowId = 1;
+      }
+    }
+
+    async function buildSeatMatrix() {
+      const arena = document.getElementById('seatMatrixArena');
+      if (!arena) return;
+
+      let seatsAvailability = {};
+      try {
+        const sid = getClientSessionId();
+        const res = await fetch(`/api/shows/${currentShowId}/seats`, {
+          headers: { 'X-Session-ID': sid }
+        });
+        const data = await res.json();
+        if (data.success && Array.isArray(data.seats)) {
+          data.seats.forEach(s => {
+            seatsAvailability[s.id] = s.status;
+          });
+        }
+      } catch (e) {
+        console.warn('Seat status fetch note:', e);
+      }
+
+      let html = '';
+      let currentTier = '';
+      SEAT_LAYOUT.forEach(layoutRow => {
+        if (layoutRow.tier !== currentTier) {
+          currentTier = layoutRow.tier;
+          html += `
+            <div class="tier-label" style="width: 100%;">
+              <span>${currentTier.toUpperCase()} CLASS - ₹${layoutRow.price}</span>
+              <span>${layoutRow.isVip ? '🛋️ Pushback Recliners' : 'Standard Cushion'}</span>
+            </div>
+          `;
+        }
+
+        html += `<div class="seat-row"><div class="row-letter">${layoutRow.row}</div>`;
+
+        for (let i = 1; i <= layoutRow.count; i++) {
+          const seatId = `${layoutRow.row}${i}`;
+          const seatStatus = seatsAvailability[seatId] || 'available';
+          const isBooked = seatStatus === 'booked';
+          const isHeldByOther = seatStatus === 'held';
+          const isSelected = selectedSeats.some(s => s.id === seatId);
+          const vipClass = layoutRow.isVip ? 'vip-tier' : '';
+
+          let extraClasses = '';
+          if (isBooked) extraClasses = 'booked';
+          else if (isHeldByOther) extraClasses = 'booked held';
+          else if (isSelected) extraClasses = 'selected';
+
+          html += `
+            <div class="seat ${vipClass} ${extraClasses}" 
+                 id="seat-${seatId}" 
+                 onclick="toggleSeat('${seatId}', ${layoutRow.price}, '${layoutRow.tier}')" 
+                 title="Seat ${seatId} - ₹${layoutRow.price} (${isBooked ? 'Booked' : (isHeldByOther ? 'Held by another user' : 'Available')})">
+              ${i}
+            </div>
+          `;
+
+          // Aisle Gap after seat 5
+          if (i === 5) {
+            html += `<div class="seat-gap"></div>`;
+          }
+        }
+
+        html += `</div>`;
+      });
+
+      arena.innerHTML = html;
+    }
+
+    async function toggleSeat(seatId, price, tier) {
+      const seatEl = document.getElementById(`seat-${seatId}`);
+      if (!seatEl) return;
+
+      if (seatEl.classList.contains('booked')) {
+        showToast(`Seat ${seatId} is already booked or held by another moviegoer.`, 'error');
+        return;
+      }
+
+      const index = selectedSeats.findIndex(s => s.id === seatId);
+
+      if (index > -1) {
+        selectedSeats.splice(index, 1);
+        seatEl.classList.remove('selected');
+      } else {
+        if (selectedSeats.length >= 8) {
+          showToast('Maximum 8 tickets allowed per booking.', 'error');
+          return;
+        }
+        selectedSeats.push({ id: seatId, price, tier });
+        seatEl.classList.add('selected');
+      }
+
+      const counterBadge = document.getElementById('selectedSeatCounterBadge');
+      if (counterBadge) {
+        counterBadge.innerText = `${selectedSeats.length} Seat${selectedSeats.length === 1 ? '' : 's'} Selected`;
+      }
+
+      // Sync hold with server
+      if (selectedSeats.length > 0) {
+        try {
+          const csrf = await getCSRFToken();
+          const sid = getClientSessionId();
+          const res = await fetch(`/api/shows/${currentShowId}/hold-seats`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': csrf,
+              'X-Session-ID': sid
+            },
+            body: JSON.stringify({
+              seats: selectedSeats.map(s => s.id),
+              session_id: sid
+            })
+          });
+          const data = await res.json();
+          if (!data.success) {
+            showToast(data.error || 'Seat selection conflict.', 'error');
+            // Revert seat selection
+            const revertIdx = selectedSeats.findIndex(s => s.id === seatId);
+            if (revertIdx > -1) {
+              selectedSeats.splice(revertIdx, 1);
+              seatEl.classList.remove('selected');
+            }
+          }
+        } catch (e) {
+          console.warn('Seat hold network notice:', e);
+        }
+      }
+
+      await updateSummary();
+    }
+
+    async function updateSnack(type, change) {
+      const next = (snacks[type] || 0) + change;
+      if (next < 0 || next > 10) return;
+      snacks[type] = next;
+      const el = document.getElementById(`qty-${type}`);
+      if (el) el.innerText = next;
+      await updateSummary();
+    }
+
+    async function applyPromo() {
+      const code = document.getElementById('promoInput').value.trim().toUpperCase();
+      currentPromoCode = code;
+      await updateSummary();
+    }
+
+    async function updateSummary() {
+      if (!selectedMovie) return;
+
+      // Movie info
+      document.getElementById('summaryMoviePoster').src = selectedMovie.poster;
+      document.getElementById('summaryMovieTitle').innerText = selectedMovie.title;
+      document.getElementById('summaryMovieMeta').innerText = `${selectedMovie.genre} • ${selectedMovie.duration}`;
+      document.getElementById('summaryMovieCert').innerText = selectedMovie.certificate;
+
+      // Theater & Date
+      const theater = document.getElementById('theaterSelect').value;
+      document.getElementById('summaryTheater').innerText = theater.split(' - ')[0];
+      document.getElementById('summaryDate').innerText = selectedDate || 'Today';
+      document.getElementById('summaryTime').innerText = selectedTime;
+
+      // Seats display
+      const seatsTextEl = document.getElementById('summarySeatsText');
+      const seatCountEl = document.getElementById('summarySeatCount');
+      if (selectedSeats.length === 0) {
+        seatsTextEl.innerText = 'None selected';
+        seatsTextEl.style.background = 'rgba(255,255,255,0.06)';
+        seatsTextEl.style.color = 'var(--text-muted)';
+        seatCountEl.innerText = '0';
+      } else {
+        seatsTextEl.innerText = selectedSeats.map(s => s.id).join(', ');
+        seatsTextEl.style.background = 'rgba(229, 9, 20, 0.2)';
+        seatsTextEl.style.color = 'var(--accent-primary)';
+        seatCountEl.innerText = selectedSeats.length;
+      }
+
+      // Server-side authoritative calculation
+      try {
+        const res = await fetch('/api/booking/calculate-summary', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            seats: selectedSeats.map(s => s.id),
+            snacks: snacks,
+            promo_code: currentPromoCode
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('summaryTicketSubtotal').innerText = `₹${data.ticket_subtotal}`;
+          document.getElementById('summarySnacksSubtotal').innerText = `₹${data.snacks_subtotal}`;
+          document.getElementById('summaryFee').innerText = `₹${data.convenience_fee}`;
+          document.getElementById('summaryGrandTotal').innerText = `₹${data.grand_total}`;
+
+          if (data.coupon_valid && data.discount_amount > 0) {
+            document.getElementById('discountRow').style.display = 'flex';
+            document.getElementById('summaryDiscount').innerText = `-₹${data.discount_amount}`;
+            if (currentPromoCode && !promoApplied) {
+              showToast(data.coupon_message, 'gold');
+              promoApplied = true;
+            }
+          } else {
+            document.getElementById('discountRow').style.display = 'none';
+            if (currentPromoCode && promoApplied) {
+              showToast('Coupon removed or invalid.', 'error');
+              promoApplied = false;
+            }
+          }
+        }
+      } catch (e) {
+        // Fallback local calc
+        const ticketSubtotal = selectedSeats.reduce((sum, s) => sum + s.price, 0);
+        document.getElementById('summaryTicketSubtotal').innerText = `₹${ticketSubtotal}`;
+      }
+
+      // CGI Form inputs
+      const cgiMovie = document.getElementById('cgiMovieName');
+      const cgiSeat = document.getElementById('cgiSeatCount');
+      if (cgiMovie) cgiMovie.value = selectedMovie.title;
+      if (cgiSeat) cgiSeat.value = selectedSeats.length;
+    }
+
+    async function confirmBooking() {
+      if (selectedSeats.length === 0) {
+        showToast('Please select at least 1 seat to proceed!', 'error');
+        return;
+      }
+
+      const name = document.getElementById('custName').value.trim();
+      const email = document.getElementById('custEmail').value.trim();
+      const phone = document.getElementById('custPhone').value.trim();
+
+      if (!name) {
+        showToast('Please enter your full name.', 'error');
+        document.getElementById('custName').focus();
+        return;
+      }
+      if (!email || !email.includes('@')) {
+        showToast('Please enter a valid email address.', 'error');
+        document.getElementById('custEmail').focus();
+        return;
+      }
+
+      const btn = document.getElementById('btnConfirmBooking');
+      const origText = btn.innerText;
+      btn.disabled = true;
+      btn.innerText = 'Processing Payment & Booking... ⏳';
+
+      try {
+        const csrf = await getCSRFToken();
+        const sid = getClientSessionId();
+        const grandTotalStr = document.getElementById('summaryGrandTotal').innerText.replace('₹', '');
+        const amount = parseFloat(grandTotalStr) || 0;
+
+        // Step 1: Sandbox Payment Intent & Server Verification
+        const intentRes = await fetch('/api/payments/create-intent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrf
+          },
+          body: JSON.stringify({ amount })
+        });
+        const intentData = await intentRes.json();
+        if (!intentData.success) {
+          throw new Error(intentData.error || 'Payment gateway initialization failed.');
+        }
+
+        // Verify sandbox payment
+        const verifyRes = await fetch('/api/payments/verify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrf
+          },
+          body: JSON.stringify({
+            order_id: intentData.order_id,
+            amount: intentData.amount,
+            timestamp: intentData.timestamp,
+            signature: intentData.signature,
+            simulated_outcome: 'success'
+          })
+        });
+        const verifyData = await verifyRes.json();
+        if (!verifyData.success || !verifyData.verified) {
+          throw new Error(verifyData.error || 'Payment verification failed.');
+        }
+
+        // Step 2: Atomic Final Confirmation in Database
+        const bookingPayload = {
+          show_id: currentShowId,
+          seats: selectedSeats.map(s => s.id),
+          snacks: snacks,
+          promo_code: currentPromoCode,
+          customer_name: name,
+          customer_email: email,
+          customer_phone: phone,
+          payment_method: 'SANDBOX_UPI_CARD',
+          payment_ref: verifyData.transaction_id,
+          session_id: sid
+        };
+
+        const bookRes = await fetch('/api/booking/confirm', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrf,
+            'X-Session-ID': sid
+          },
+          body: JSON.stringify(bookingPayload)
+        });
+
+        const bookData = await bookRes.json();
+        btn.disabled = false;
+        btn.innerText = origText;
+
+        if (bookData.success && bookData.booking) {
+          showToast('🎉 Booking Confirmed! Verified in MySQL Database.', 'success');
+          // Clear current seats
+          selectedSeats = [];
+          await buildSeatMatrix();
+          await updateSummary();
+          // Display verifiable M-Ticket pass
+          await displayTicketModal(bookData.booking.booking_ref);
+        } else {
+          showToast(bookData.error || 'Booking could not be finalized.', 'error');
+        }
+
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerText = origText;
+        showToast(err.message || 'Payment or reservation transaction error.', 'error');
+      }
+    }
+  </script>
+</body>
+</html>

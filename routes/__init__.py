@@ -1,0 +1,3 @@
+"""
+CineMithresh - API Route Blueprints
+"""

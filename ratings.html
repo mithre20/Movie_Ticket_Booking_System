@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Ratings & Audience Reviews - CineMithresh</title>
+  <meta name="description" content="Read authentic audience reviews and submit your cinema experience rating for blockbusters at CineMithresh.">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <a href="./index.html" class="brand-logo">
+        <img data-media="logo1.jpg" onerror="mediaFallback(this)" alt="CineMithresh Logo">
+        <div class="brand-text">
+          <div class="brand-title">CINE<span>MITHRESH</span></div>
+          <div class="brand-tagline">CINEMA EXPERIENCE REDEFINED</div>
+        </div>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="./index.html" class="nav-link">🎬 Home</a></li>
+        <li><a href="./booking.html" class="nav-link">🎟️ Book Tickets</a></li>
+        <li><a href="./ratings.html" class="nav-link active">⭐ Ratings & Reviews</a></li>
+        <li><a href="./about_us.html" class="nav-link">ℹ️ About Us</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button onclick="openMyBookingsModal()" class="btn btn-secondary btn-sm">
+          🎟️ My Tickets
+        </button>
+        <div id="navUserSlot">
+          <a href="./login.html" class="btn btn-primary btn-sm">Sign In</a>
+        </div>
+        <button class="mobile-toggle" aria-label="Toggle Navigation">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Ratings Main Section -->
+  <main class="container">
+    <div style="margin-top: 28px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px;">
+      <div>
+        <h1 style="font-size: 2.1rem; font-weight: 800;">Audience Ratings & Reviews</h1>
+        <p style="color: var(--text-secondary); font-size: 0.92rem;">Share your genuine theatrical experience and see what fellow movie lovers have to say</p>
+      </div>
+      <div class="badge badge-gold" style="padding: 6px 14px; font-size: 0.85rem;">
+        ⭐ Verified Moviegoers
+      </div>
+    </div>
+
+    <div class="ratings-dashboard">
+      <!-- Left Column: Submit Review Form -->
+      <section class="rating-form-card">
+        <h2 style="font-size: 1.35rem; margin-bottom: 6px;">Rate Your Experience</h2>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 22px;">Your feedback helps us curate world-class cinema experiences.</p>
+
+        <form id="ratingForm" onsubmit="submitReview(event)">
+          <div class="form-group">
+            <label class="form-label">Select Movie</label>
+            <select class="theater-select" id="reviewMovieSelect" required>
+              <option value="godzilla-kong">Godzilla x Kong: The New Empire</option>
+              <option value="manjummel-boys">Manjummel Boys</option>
+              <option value="aranmanai-4">Aranmanai 4</option>
+              <option value="bad-boys">Bad Boys: Ride or Die</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Your Rating</label>
+            <div class="star-rating-picker" id="starPicker">
+              <span class="star active" data-rating="1" onclick="setRating(1)">★</span>
+              <span class="star active" data-rating="2" onclick="setRating(2)">★</span>
+              <span class="star active" data-rating="3" onclick="setRating(3)">★</span>
+              <span class="star active" data-rating="4" onclick="setRating(4)">★</span>
+              <span class="star active" data-rating="5" onclick="setRating(5)">★</span>
+            </div>
+            <div class="star-label-text" id="starLabel">5 Stars - Outstanding Masterpiece!</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input type="text" class="input-field" id="reviewerName" placeholder="Enter your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="input-field" id="reviewerEmail" placeholder="name@example.com" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Your Review & Comments</label>
+            <textarea class="input-field" id="reviewerComment" rows="4" placeholder="Tell us about the picture clarity, Dolby Atmos audio, theatre comfort, and storyline..." style="resize: vertical; min-height: 90px;" required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 8px;">
+            ⭐ Submit Review
+          </button>
+        </form>
+
+        <!-- Hidden CGI Form Fallback -->
+        <form id="cgiRatingForm" action="rating.py" method="post" style="display: none;">
+          <input type="hidden" name="myname" id="cgiRatingName">
+          <input type="hidden" name="email" id="cgiRatingEmail">
+          <input type="hidden" name="myrate" id="cgiRatingValue">
+        </form>
+      </section>
+
+      <!-- Right Column: Stats & Reviews Feed -->
+      <section>
+        <!-- Score Card Overview -->
+        <div class="stats-score-card">
+          <div>
+            <div class="score-big" id="overallScore">4.8</div>
+            <div style="color: var(--accent-gold); font-size: 1.1rem; margin-top: 4px;">★★★★★</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;" id="totalReviewsCount">Based on 148 ratings</div>
+          </div>
+
+          <div class="score-meta">
+            <div class="bar-row">
+              <span>5★</span>
+              <div class="progress-track"><div class="progress-fill" style="width: 78%;"></div></div>
+              <span>78%</span>
+            </div>
+            <div class="bar-row">
+              <span>4★</span>
+              <div class="progress-track"><div class="progress-fill" style="width: 15%;"></div></div>
+              <span>15%</span>
+            </div>
+            <div class="bar-row">
+              <span>3★</span>
+              <div class="progress-track"><div class="progress-fill" style="width: 5%;"></div></div>
+              <span>5%</span>
+            </div>
+            <div class="bar-row">
+              <span>2★</span>
+              <div class="progress-track"><div class="progress-fill" style="width: 1.5%;"></div></div>
+              <span>1.5%</span>
+            </div>
+            <div class="bar-row">
+              <span>1★</span>
+              <div class="progress-track"><div class="progress-fill" style="width: 0.5%;"></div></div>
+              <span>0.5%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Chips for Reviews -->
+        <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px;" id="reviewFilterChips">
+          <button class="chip active" onclick="filterReviews('all', this)">All Reviews</button>
+          <button class="chip" onclick="filterReviews('godzilla-kong', this)">Godzilla x Kong</button>
+          <button class="chip" onclick="filterReviews('manjummel-boys', this)">Manjummel Boys</button>
+          <button class="chip" onclick="filterReviews('aranmanai-4', this)">Aranmanai 4</button>
+          <button class="chip" onclick="filterReviews('bad-boys', this)">Bad Boys</button>
+        </div>
+
+        <!-- Community Reviews List -->
+        <div id="reviewsContainer">
+          <!-- Rendered via JS -->
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <div class="brand-title">CINE<span>MITHRESH</span></div>
+        <p>Your premier destination for entertainment, authentic audience ratings, and unforgettable cinematic joy.</p>
+      </div>
+      <div>
+        <h4 class="footer-title">Pages</h4>
+        <ul class="footer-links">
+          <li><a href="./index.html">Home</a></li>
+          <li><a href="./booking.html">Book Tickets</a></li>
+          <li><a href="./ratings.html">Ratings</a></li>
+          <li><a href="./about_us.html">About Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-title">Support</h4>
+        <ul class="footer-links">
+          <li><a href="./about_us.html">Customer Feedback</a></li>
+          <li><a href="./about_us.html#faq">Ticket Cancellation Policy</a></li>
+          <li><a href="./about_us.html#faq">Safety & Hygiene</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-title">Cinema Address</h4>
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">Parimalam Complex, 161 Mettur Road, Erode, Tamil Nadu</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/static/app.js"></script>
+  <script>
+    let currentRating = 5;
+    let activeMovieFilter = 'all';
+
+    const RATING_LABELS = {
+      1: '1 Star - Disappointing Experience',
+      2: '2 Stars - Below Average',
+      3: '3 Stars - Moderate & Decent',
+      4: '4 Stars - Great Entertainment',
+      5: '5 Stars - Outstanding Masterpiece!'
+    };
+
+    const CGI_MAPPINGS = {
+      1: 'TOO BAD',
+      2: 'BAD',
+      3: 'MODRATE',
+      4: 'GOOD',
+      5: 'EXCELLENT'
+    };
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Dynamically populate movie dropdown
+      const select = document.getElementById('reviewMovieSelect');
+      if (select && typeof MOVIES_DATABASE !== 'undefined') {
+        select.innerHTML = MOVIES_DATABASE.map(m => `
+          <option value="${m.id}">${m.title} (${m.language.split('/')[0].trim()})</option>
+        `).join('');
+      }
+
+      // Dynamically populate review filter chips
+      const chipsContainer = document.getElementById('reviewFilterChips');
+      if (chipsContainer && typeof MOVIES_DATABASE !== 'undefined') {
+        let chipsHtml = '<button class="chip active" onclick="filterReviews(\'all\', this)">All Reviews</button>';
+        MOVIES_DATABASE.slice(0, 8).forEach(m => {
+          chipsHtml += `<button class="chip" onclick="filterReviews('${m.id}', this)">${m.title}</button>`;
+        });
+        chipsContainer.innerHTML = chipsHtml;
+      }
+
+      // Check URL parameters for pre-selected movie
+      const urlParams = new URLSearchParams(window.location.search);
+      const movieParam = urlParams.get('movie');
+      if (movieParam && select) {
+        select.value = movieParam;
+        activeMovieFilter = movieParam;
+      }
+
+      // Pre-fill user data if logged in
+      const user = await fetchCurrentUser();
+      if (user) {
+        if (user.name) document.getElementById('reviewerName').value = user.name;
+        if (user.email) document.getElementById('reviewerEmail').value = user.email;
+      }
+
+      await renderReviewsList();
+    });
+
+    function setRating(val) {
+      currentRating = val;
+      const stars = document.querySelectorAll('#starPicker .star');
+      stars.forEach(s => {
+        const r = parseInt(s.getAttribute('data-rating'));
+        if (r <= val) {
+          s.classList.add('active');
+        } else {
+          s.classList.remove('active');
+        }
+      });
+      document.getElementById('starLabel').innerText = RATING_LABELS[val];
+    }
+
+    async function renderReviewsList() {
+      const container = document.getElementById('reviewsContainer');
+      if (!container) return;
+
+      const data = await fetchReviewsFromApi(activeMovieFilter);
+      const allReviews = data.reviews || [];
+
+      // Update score overview
+      const scoreBig = document.getElementById('overallScore');
+      if (scoreBig && data.average_score) {
+        scoreBig.innerText = data.average_score;
+      }
+      const countEl = document.getElementById('totalReviewsCount');
+      if (countEl && data.total_reviews !== undefined) {
+        countEl.innerText = `Based on ${data.total_reviews} verified rating${data.total_reviews === 1 ? '' : 's'}`;
+      }
+
+      if (allReviews.length === 0) {
+        container.innerHTML = `
+          <div style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 40px; text-align: center; color: var(--text-muted);">
+            <div style="font-size: 2.5rem; margin-bottom: 10px;">💬</div>
+            <h3>No Reviews Yet for this Title</h3>
+            <p>Be the first movie lover to write a review!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = allReviews.map(r => {
+        const initials = r.userName ? r.userName.slice(0, 2).toUpperCase() : 'U';
+        const starsText = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+
+        return `
+          <div class="review-item" id="${r.id}">
+            <div class="review-author-row">
+              <div class="author-info">
+                <div class="author-avatar">${initials}</div>
+                <div>
+                  <h4 style="font-size: 0.95rem; margin: 0; color: #fff;">${r.userName}</h4>
+                  <div style="font-size: 0.76rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+                    <span class="badge badge-cyan" style="padding: 2px 6px; font-size: 0.68rem;">${r.movieTitle}</span>
+                    <span>• ${r.date}</span>
+                    <span style="color: var(--accent-green);">✓ Verified Viewer</span>
+                  </div>
+                </div>
+              </div>
+              <div style="color: var(--accent-gold); font-size: 1.1rem; font-weight: 700;">
+                ${starsText}
+              </div>
+            </div>
+            <p class="review-text">${r.comment}</p>
+            <div style="margin-top: 12px; display: flex; justify-content: flex-end; align-items: center; gap: 12px;">
+              <button onclick="likeReview('${r.id}', this)" class="btn btn-secondary btn-sm" style="padding: 4px 10px; font-size: 0.78rem;">
+                👍 Helpful (<span>${r.likes || 0}</span>)
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function filterReviews(movieId, btn) {
+      activeMovieFilter = movieId;
+      document.querySelectorAll('#reviewFilterChips .chip').forEach(c => c.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      await renderReviewsList();
+    }
+
+    async function likeReview(reviewId, btn) {
+      const span = btn.querySelector('span');
+      try {
+        const csrf = await getCSRFToken();
+        const res = await fetch(`/api/reviews/${encodeURIComponent(reviewId)}/like`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrf
+          }
+        });
+        const data = await res.json();
+        if (data.success && span) {
+          span.innerText = data.new_likes;
+          btn.classList.add('btn-gold');
+          btn.disabled = true;
+          showToast('Thanks for your feedback!', 'info');
+        }
+      } catch (e) {
+        if (span) {
+          let count = parseInt(span.innerText);
+          span.innerText = count + 1;
+        }
+      }
+    }
+
+    async function submitReview(e) {
+      e.preventDefault();
+
+      const movieSelect = document.getElementById('reviewMovieSelect');
+      const movieId = movieSelect.value;
+      const movieTitle = movieSelect.options[movieSelect.selectedIndex].text;
+      const name = document.getElementById('reviewerName').value.trim();
+      const email = document.getElementById('reviewerEmail').value.trim();
+      const comment = document.getElementById('reviewerComment').value.trim();
+
+      if (!name || !email || !comment) {
+        showToast('Please fill out all review fields.', 'error');
+        return;
+      }
+
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Posting Review... ⏳';
+      }
+
+      try {
+        const csrf = await getCSRFToken();
+        const res = await fetch('/api/reviews', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrf
+          },
+          body: JSON.stringify({
+            movie_id: movieId,
+            name: name,
+            email: email,
+            rating: currentRating,
+            comment: comment
+          })
+        });
+
+        const data = await res.json();
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = '⭐ Submit Review';
+        }
+
+        if (data.success) {
+          showToast('🎉 Thank you! Your review has been saved to the database.', 'success');
+          document.getElementById('reviewerComment').value = '';
+          await renderReviewsList();
+        } else {
+          showToast(data.error || 'Failed to submit review.', 'error');
+        }
+      } catch (err) {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = '⭐ Submit Review';
+        }
+        showToast('Network error submitting review.', 'error');
+      }
+    }
+  </script>
+</body>
+</html>

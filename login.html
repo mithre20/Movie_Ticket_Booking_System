@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Login & Sign Up - CineMithresh</title>
+  <meta name="description" content="Sign in or register for CineMithresh to view tickets, earn CinePoints rewards, and enjoy faster cinema reservations.">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <a href="./index.html" class="brand-logo">
+        <img data-media="logo1.jpg" onerror="mediaFallback(this)" alt="CineMithresh Logo">
+        <div class="brand-text">
+          <div class="brand-title">CINE<span>MITHRESH</span></div>
+          <div class="brand-tagline">CINEMA EXPERIENCE REDEFINED</div>
+        </div>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="./index.html" class="nav-link">🎬 Home</a></li>
+        <li><a href="./booking.html" class="nav-link">🎟️ Book Tickets</a></li>
+        <li><a href="./ratings.html" class="nav-link">⭐ Ratings & Reviews</a></li>
+        <li><a href="./about_us.html" class="nav-link">ℹ️ About Us</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button onclick="openMyBookingsModal()" class="btn btn-secondary btn-sm">
+          🎟️ My Tickets
+        </button>
+        <div id="navUserSlot">
+          <a href="./login.html" class="btn btn-primary btn-sm">Sign In</a>
+        </div>
+        <button class="mobile-toggle" aria-label="Toggle Navigation">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Auth Page -->
+  <main class="container">
+    <div class="auth-wrapper" id="authWrapper">
+      <!-- Tabs -->
+      <div class="auth-tabs" id="authTabsContainer">
+        <div class="auth-tab active" id="tabSignIn" onclick="switchAuthTab('signin')">Sign In</div>
+        <div class="auth-tab" id="tabSignUp" onclick="switchAuthTab('signup')">Create Account</div>
+      </div>
+
+      <!-- Auth Form (Sign In / Register) -->
+      <div id="authFormArea">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <h2 id="authHeading" style="font-size: 1.6rem; margin-bottom: 4px;">Welcome Back!</h2>
+          <p id="authSubtitle" style="font-size: 0.85rem; color: var(--text-secondary);">Access your movie tickets and member discounts</p>
+        </div>
+
+        <form id="mainAuthForm" onsubmit="handleAuthSubmit(event)">
+          <!-- Name Field (shown on Sign Up) -->
+          <div class="form-group" id="nameGroup" style="display: none;">
+            <label class="form-label">Full Name</label>
+            <div class="input-with-icon">
+              <span class="input-icon">👤</span>
+              <input type="text" class="input-field" id="authName" placeholder="Mithresh P">
+            </div>
+          </div>
+
+          <!-- Email Field -->
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <div class="input-with-icon">
+              <span class="input-icon">✉️</span>
+              <input type="email" class="input-field" id="authEmail" placeholder="yourname@gmail.com" required>
+            </div>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="input-with-icon">
+              <span class="input-icon">🔒</span>
+              <input type="password" class="input-field" id="authPassword" placeholder="••••••••" required>
+              <button type="button" class="toggle-password" onclick="togglePasswordVis('authPassword')">👁️</button>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; font-size: 0.82rem; color: var(--text-secondary);">
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+              <input type="checkbox" checked style="accent-color: var(--accent-primary);"> Remember me
+            </label>
+            <a href="#" onclick="showToast('Password reset link sent to registered email.', 'info'); return false;" style="color: var(--accent-gold);">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg" id="authSubmitBtn">
+            Sign In to Account
+          </button>
+        </form>
+
+        <!-- Demo Quick Login Button for testing convenience -->
+        <div style="margin-top: 18px; text-align: center;">
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px;">QUICK TESTING HELPER</div>
+          <button type="button" onclick="quickDemoLogin()" class="btn btn-gold btn-block btn-sm">
+            ⚡ Quick Test Login as Mithresh
+          </button>
+        </div>
+
+        <!-- Hidden CGI Form Fallback for connection1.py -->
+        <form id="cgiLoginForm" action="connection1.py" method="post" style="display: none;">
+          <input type="hidden" name="myname" id="cgiUsername">
+          <input type="hidden" name="email" id="cgiEmail">
+          <input type="hidden" name="pwd" id="cgiPassword">
+        </form>
+      </div>
+
+      <!-- Logged-In Profile Dashboard (Shown when user is authenticated) -->
+      <div id="profileDashboardArea" style="display: none; text-align: center;">
+        <div style="width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary), var(--accent-gold)); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: #fff; box-shadow: 0 0 20px var(--accent-primary-glow);" id="profileAvatar">
+          M
+        </div>
+        <h2 style="font-size: 1.5rem; margin-bottom: 4px;" id="profileName">Mithresh P</h2>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px;" id="profileEmail">mithresh@example.com</p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; text-align: left;">
+          <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 14px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Total Tickets</div>
+            <div style="font-size: 1.4rem; font-weight: 800; color: #fff;" id="profileTicketCount">0</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 14px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">CinePoints</div>
+            <div style="font-size: 1.4rem; font-weight: 800; color: var(--accent-gold);">450 pts</div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <a href="./booking.html" class="btn btn-primary btn-block">🎟️ Book Another Movie</a>
+          <button onclick="openMyBookingsModal()" class="btn btn-secondary btn-block">View My Tickets</button>
+          <button onclick="logoutUser()" class="btn btn-secondary btn-block" style="color: var(--accent-primary); border-color: rgba(229,9,20,0.3);">
+            Sign Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <div class="brand-title">CINE<span>MITHRESH</span></div>
+        <p>Your one-stop cinema destination with seamless ticketing and premier Dolby Atmos viewing.</p>
+      </div>
+      <div>
+        <h4 class="footer-title">Pages</h4>
+        <ul class="footer-links">
+          <li><a href="./index.html">Home</a></li>
+          <li><a href="./booking.html">Book Tickets</a></li>
+          <li><a href="./ratings.html">Ratings</a></li>
+          <li><a href="./about_us.html">About Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-title">Safety & Privacy</h4>
+        <ul class="footer-links">
+          <li><a>End-to-End Encryption</a></li>
+          <li><a>Zero Convenience Fees Policy</a></li>
+          <li><a>Terms of Service</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-title">Cinema Care</h4>
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">Customer Helpline: 0424-225678</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/static/app.js"></script>
+  <script>
+    let currentTab = 'signin';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await checkLoginStatus();
+    });
+
+    async function checkLoginStatus() {
+      const user = await fetchCurrentUser();
+      const formArea = document.getElementById('authFormArea');
+      const profileArea = document.getElementById('profileDashboardArea');
+      const tabs = document.getElementById('authTabsContainer');
+
+      if (user) {
+        if (formArea) formArea.style.display = 'none';
+        if (tabs) tabs.style.display = 'none';
+        if (profileArea) {
+          profileArea.style.display = 'block';
+          document.getElementById('profileName').innerText = user.name;
+          document.getElementById('profileEmail').innerText = user.email;
+          document.getElementById('profileAvatar').innerText = user.name ? user.name[0].toUpperCase() : 'U';
+          document.getElementById('profileTicketCount').innerText = user.bookings_count !== undefined ? user.bookings_count : '0';
+        }
+      } else {
+        if (formArea) formArea.style.display = 'block';
+        if (tabs) tabs.style.display = 'flex';
+        if (profileArea) profileArea.style.display = 'none';
+      }
+    }
+
+    function switchAuthTab(tab) {
+      currentTab = tab;
+      const tabSignIn = document.getElementById('tabSignIn');
+      const tabSignUp = document.getElementById('tabSignUp');
+      const nameGroup = document.getElementById('nameGroup');
+      const heading = document.getElementById('authHeading');
+      const subtitle = document.getElementById('authSubtitle');
+      const submitBtn = document.getElementById('authSubmitBtn');
+
+      if (tab === 'signin') {
+        tabSignIn.classList.add('active');
+        tabSignUp.classList.remove('active');
+        nameGroup.style.display = 'none';
+        heading.innerText = 'Welcome Back!';
+        subtitle.innerText = 'Access your movie tickets and member discounts';
+        submitBtn.innerText = 'Sign In to Account';
+      } else {
+        tabSignUp.classList.add('active');
+        tabSignIn.classList.remove('active');
+        nameGroup.style.display = 'block';
+        heading.innerText = 'Join CineMithresh';
+        subtitle.innerText = 'Create an account to book tickets with ease';
+        submitBtn.innerText = 'Create Account & Continue';
+      }
+    }
+
+    function togglePasswordVis(inputId) {
+      const el = document.getElementById(inputId);
+      if (el) {
+        el.type = el.type === 'password' ? 'text' : 'password';
+      }
+    }
+
+    async function quickDemoLogin() {
+      const submitBtn = document.getElementById('authSubmitBtn');
+      try {
+        const csrf = await getCSRFToken();
+        const res = await fetch('/api/auth/demo-login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrf
+          }
+        });
+        const data = await res.json();
+        if (data.success && data.user) {
+          setCurrentUser(data.user);
+          showToast(`Logged in as ${data.user.name}!`, 'success');
+          await checkLoginStatus();
+        } else {
+          showToast(data.error || 'Demo login failed.', 'error');
+        }
+      } catch (err) {
+        showToast('Unable to connect to server. Please ensure Flask is running.', 'error');
+      }
+    }
+
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+
+      const email = document.getElementById('authEmail').value.trim();
+      const password = document.getElementById('authPassword').value;
+      const name = currentTab === 'signup' 
+        ? (document.getElementById('authName').value.trim() || 'Movie Fan')
+        : '';
+
+      if (!email || !password) {
+        showToast('Please fill out all credentials.', 'error');
+        return;
+      }
+
+      if (currentTab === 'signup' && !name) {
+        showToast('Please enter your full name.', 'error');
+        return;
+      }
+
+      const submitBtn = document.getElementById('authSubmitBtn');
+      const originalText = submitBtn.innerText;
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Authenticating... ⏳';
+
+      try {
+        const csrf = await getCSRFToken();
+        const endpoint = currentTab === 'signup' ? '/api/auth/register' : '/api/auth/login';
+        const payload = currentTab === 'signup'
+          ? { name, email, password }
+          : { email, password };
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrf
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalText;
+
+        if (data.success && data.user) {
+          setCurrentUser(data.user);
+          showToast(data.message || (currentTab === 'signup' ? 'Account created successfully!' : 'Signed in successfully!'), 'success');
+          await checkLoginStatus();
+        } else {
+          showToast(data.error || 'Authentication failed. Please verify credentials.', 'error');
+        }
+      } catch (err) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalText;
+        showToast('Network error connecting to authentication server.', 'error');
+      }
+    }
+  </script>
+</body>
+</html>
